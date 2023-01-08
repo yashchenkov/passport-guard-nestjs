@@ -28,15 +28,14 @@ export class UsersService {
         },
     ];
 
-    // async findOne(username: string): Promise<User | undefined> {
-    //     return this.users.find(user => user.username === username);
-    // }
 
-    async findOne(id: number): Promise<User | undefined> {
-        return this.users.find(user => user.id === id);
+    async findOne(email: string): Promise<User | undefined> {
+        return this.users.find(user => user.email === email);
     }
 
     async addOne(data: UserData): Promise<User | undefined> {
-        return this.users.push({id: this.users.length, ...data});
+        console.log('addone' + data.email);
+        this.users.push({id: this.users.length, email: data.email, password: data.password, firstName: data.firstName, lastName: data.lastName});
+        return this.users[this.users.length - 1]
     }
 }

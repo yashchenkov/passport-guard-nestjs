@@ -12,24 +12,35 @@ interface registerData {
 
 @Injectable()
 export class AuthService {
+    
     constructor(private usersService: UsersService, private jwtService: JwtService) {}
-
-    async validateUser(id: number): Promise<any> {
-        const user = await this.usersService.findOne(id);
-        if (user) {
-            this.jwtService.sign({id: id});
+    
+    async validateUser(email: string, pass: string): Promise<any> {
+        console.log('validateUser');
+        const user = await this.usersService.findOne(email);
+        console.log(user);
+        if (user && pass === user.password) {
             return user;
         }
         return null;
     }
 
     async registerUser(data: registerData): Promise<any> {
+        console.log('registerUser');
         const user = await this.usersService.addOne(data);
+        console.log('register' + user);
         if (user) {
-            this.jwtService.sign(data);
             return user;
         }
         return null;
+    }
+
+    async login(user: any): Promise<any> {
+        console.log('login');
+        const payload = { email: user.email, sub: user.userId };
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
     }
 
 }
